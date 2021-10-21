@@ -15,3 +15,5 @@ contents_list = [i for i in contents]
 print(prices_list)
 print(days_list)
 print(contents_list)
+
+print('Héjjmánő'.encode('UTF-8').decode("UTF-8"))
