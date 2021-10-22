@@ -1,5 +1,6 @@
 import requests
 from lxml import html
+from lxml import etree
 
 page = requests.get(url = 'https://www.teletal.hu/etlap/45')
 content = html.fromstring(page.content)
@@ -10,10 +11,13 @@ contents = content.xpath("//div[contains(@class,'menu-card-5-day')]/div[contains
 
 prices_list = [i for i in prices]
 days_list = [i for i in days]
-contents_list = [i for i in contents]
+contents_list = [type(i) for i in contents]
 
 print(prices_list)
 print(days_list)
 print(contents_list)
 
+# https://www.youtube.com/watch?v=CxeP1dQi9rg
 print('Héjjmánő'.encode('UTF-8').decode("UTF-8"))
+print(type('Héjjmánő'))
+print(type('Héjjmánő'.encode('UTF-8')))
