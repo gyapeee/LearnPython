@@ -8,3 +8,12 @@ Finally the program should print out for each weekday the:
 1. name of the day,
 2. the name of the cheapest meal containing “csirkemell” and
 3. the price of the cheapest meal containing “csirkemell” component offered that particular weekday.
+
+-----
+
+define functions for subtasks
+ - add necessary comments
+pair the data(list,set,tuple,dict?)
+convert bytes to string
+search minimum for each day
+use weekday names instead of numbers
