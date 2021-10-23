@@ -1,9 +1,7 @@
 import requests
 from lxml import html
-import chardet
 
 page = requests.get(url = 'https://www.teletal.hu/etlap/45')
-#content = html.tostring(page.content)
 content = html.fromstring(page.content)
 print(type(page))
 print(type(content))
@@ -26,3 +24,7 @@ print(contents_list)
 
 print(chardet.detect('éőáóú)'.encode()))
 #print(chardet.detect(contents_list[0]))
+# https://www.youtube.com/watch?v=CxeP1dQi9rg
+print('Héjjmánő'.encode('UTF-8').decode("UTF-8"))
+print(type('Héjjmánő'))
+print(type('Héjjmánő'.encode('UTF-8')))
