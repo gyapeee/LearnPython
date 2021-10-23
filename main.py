@@ -1,3 +1,4 @@
+import chardet
 import requests
 from lxml import html
 
