@@ -1,5 +1,6 @@
 import time
 from enum import Enum
+
 from lxml import html
 from selenium import webdriver
 from selenium.webdriver import Keys
@@ -25,10 +26,11 @@ options.headless = True
 browser = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=options)
 browser.get(TELETAL_URL)
 
-
 body = browser.find_element(By.TAG_NAME, 'html')
+body.send_keys(Keys.END)
 end_of_page = browser.execute_script('return window.pageYOffset;')
 print(end_of_page)
+body.send_keys(Keys.HOME)
 for i in range(15):
     time.sleep(1)
     print(browser.execute_script('return window.scrollY;'))
@@ -58,5 +60,7 @@ for meal in meals:
         cheapest_csirkmell_at_weekdays[meal[0]][1] = meal[2]
 
 print(cheapest_csirkmell_at_weekdays)
+# getting the mininum is not fine
+print('520 Ft' > '1.290 Ft')
 
 browser.close()
