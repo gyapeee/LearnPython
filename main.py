@@ -42,7 +42,7 @@ def get_end_position():
 
 
 def traverse_page():
-    for i in range(15):
+    for i in range(17):
         time.sleep(1)
         print(browser.execute_script('return window.scrollY;'))
         body.send_keys(Keys.PAGE_DOWN)
