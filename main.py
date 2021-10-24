@@ -3,7 +3,8 @@ import requests
 from lxml import html
 
 page = requests.get(url = 'https://www.teletal.hu/etlap/45')
-content = html.fromstring(page.content)
+#content = html.fromstring(page.content.decode('latin-1'))
+content = html.fromstring(page.content.decode('utf-8'))
 print(type(page))
 print(type(content))
 print(type(page.content))
