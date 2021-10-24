@@ -20,15 +20,13 @@ class Workdays(Enum):
     PÉNTEK = 5
 
 
-# page = requests.get(url=TELETAL_URL)
-# decode bytes of page's content
-# document = html.fromstring(page.content.decode('utf-8'))
 options = Options()
 options.headless = True
-browser = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=options)
+browser = webdriver.Chrome(ChromeDriverManager().install()) # , chrome_options=options)
 browser.get(TELETAL_URL)
 body = browser.find_element(By.TAG_NAME, 'body')
-body.send_keys(Keys.END)
+for i in range(10):
+    body.send_keys(Keys.PAGE_DOWN)
 html_page = browser.page_source
 time.sleep(2)
 
