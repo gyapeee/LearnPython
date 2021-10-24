@@ -9,20 +9,10 @@ content = html.fromstring(page.content.decode('utf-8'))
 
 prefix = "//div[contains(@class,'menu-card-5-day')]/div[contains(@class,'menu-cell-text')]"
 csirkemell = "[contains(normalize-space(),'csirkemell')]/"
+
 prices = content.xpath(prefix + csirkemell + "child::div[contains(@class,'menu-price-field')]/div/h6/strong/text()")
 days = content.xpath(prefix + "/div" + csirkemell + "following-sibling::div/a/@nap")
 contents = content.xpath(prefix + csirkemell + "div/text()")
 
-print(prices)
-print(days)
-print(contents)
-
-print("\n")
-
-# packing
-t = 123, 12323, 'sdfsfdsf'
-print(t)
-# unpacking
-x, y, z = t
-print(z)
-print(x, y, z)
+meal_dict = {day: (content, price) for day, content, price in zip(days, contents, prices)}
+print(meal_dict)
