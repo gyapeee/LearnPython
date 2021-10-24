@@ -98,4 +98,4 @@ document = html.fromstring(html_page)
 days, ingredients, prices = extract_data()
 print_minimums(days, ingredients, prices)
 
-browser.close()
+browser.quit()
