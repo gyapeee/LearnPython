@@ -22,20 +22,29 @@ class Workdays(Enum):
 
 options = Options()
 options.headless = True
-browser = webdriver.Chrome(ChromeDriverManager().install()) # , chrome_options=options)
+browser = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=options)
 browser.get(TELETAL_URL)
-body = browser.find_element(By.TAG_NAME, 'body')
-for i in range(10):
+
+
+body = browser.find_element(By.TAG_NAME, 'html')
+end_of_page = browser.execute_script('return window.pageYOffset;')
+print(end_of_page)
+for i in range(15):
+    time.sleep(1)
+    print(browser.execute_script('return window.scrollY;'))
     body.send_keys(Keys.PAGE_DOWN)
+
 html_page = browser.page_source
 time.sleep(2)
-
 document = html.fromstring(html_page)
 
 # extract days, meals and prices which contains csirkemell
 days = document.xpath(PREFIX + "/div" + CSIRKEMELL + "following-sibling::div/a/@nap")
 ingredients = document.xpath(PREFIX + CSIRKEMELL + "div/text()")
 prices = document.xpath(PREFIX + CSIRKEMELL + "child::div[contains(@class,'menu-price-field')]/div/h6/strong/text()")
+
+print(len(ingredients))
+print(ingredients)
 
 # initialize the output
 cheapest_csirkmell_at_weekdays = {day.name: ['Nincs', 'Nincs'] for day in Workdays}
