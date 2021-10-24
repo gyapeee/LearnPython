@@ -13,7 +13,7 @@ Finally the program should print out for each weekday the:
 
 define functions for subtasks
  - add necessary comments
-pair the data(list,set,tuple,dict?)
-convert bytes to string
++pair the data(list,set,tuple,dict?)
++convert bytes to string
 search minimum for each day
-use weekday names instead of numbers
++use weekday names instead of numbers
