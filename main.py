@@ -1,8 +1,10 @@
+import time
 from enum import Enum
 
-import requests
-from lxml import html
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 
+TELETAL_URL = "https://www.teletal.hu/etlap/45"
 PREFIX = "//div[contains(@class,'menu-card-5-day')]/div[contains(@class,'menu-cell-text')]"
 CSIRKEMELL = "[contains(normalize-space(),'csirkemell')]/"
 
@@ -15,25 +17,35 @@ class Workdays(Enum):
     PÉNTEK = 5
 
 
-# get the menu from the url
-page = requests.get(url='https://www.teletal.hu/etlap/45')
+# page = requests.get(url=TELETAL_URL)
 # decode bytes of page's content
-document = html.fromstring(page.content.decode('utf-8'))
+# document = html.fromstring(page.content.decode('utf-8'))
+browser = webdriver.Chrome(ChromeDriverManager().install())
+browser.get(TELETAL_URL)
 
-# extract days, meals and prices which contains csirkemell
-days = document.xpath(PREFIX + "/div" + CSIRKEMELL + "following-sibling::div/a/@nap")
-ingredients = document.xpath(PREFIX + CSIRKEMELL + "div/text()")
-prices = document.xpath(PREFIX + CSIRKEMELL + "child::div[contains(@class,'menu-price-field')]/div/h6/strong/text()")
+html_page = browser.page_source
+time.sleep(2)
+print(type(html_page))
+print(html_page)
+#
+# document = html.fromstring(page.content.decode('utf-8'))
+#
+# # extract days, meals and prices which contains csirkemell
+# days = document.xpath(PREFIX + "/div" + CSIRKEMELL + "following-sibling::div/a/@nap")
+# ingredients = document.xpath(PREFIX + CSIRKEMELL + "div/text()")
+# prices = document.xpath(PREFIX + CSIRKEMELL + "child::div[contains(@class,'menu-price-field')]/div/h6/strong/text()")
+#
+# # initialize the output
+# cheapest_csirkmell_at_weekdays = {day.name: ['Nincs', 'Nincs'] for day in Workdays}
+# # create a generator for the merged days, meals and prices
+# meals = ((Workdays(int(day)).name, ingredient, price) for day, ingredient, price in zip(days, ingredients, prices))
+# # Add cheaper meal to each day
+# for meal in meals:
+#     # replace the initial data if the actual price is less
+#     if cheapest_csirkmell_at_weekdays[meal[0]][1] > meal[2]:
+#         cheapest_csirkmell_at_weekdays[meal[0]][0] = meal[1]
+#         cheapest_csirkmell_at_weekdays[meal[0]][1] = meal[2]
+#
+# print(cheapest_csirkmell_at_weekdays)
 
-# initialize the output
-cheapest_csirkmell_at_weekdays = {day.name: ['Nincs', 'Nincs'] for day in Workdays}
-# create a generator for the merged days, meals and prices
-meals = ((Workdays(int(day)).name, ingredient, price) for day, ingredient, price in zip(days, ingredients, prices))
-# Add cheaper meal to each day
-for meal in meals:
-    # replace the initial data if the actual price is less
-    if cheapest_csirkmell_at_weekdays[meal[0]][1] > meal[2]:
-        cheapest_csirkmell_at_weekdays[meal[0]][0] = meal[1]
-        cheapest_csirkmell_at_weekdays[meal[0]][1] = meal[2]
-
-print(cheapest_csirkmell_at_weekdays)
+browser.close()
