@@ -55,6 +55,8 @@ def extract_data():
     prices = document.xpath(
         PREFIX + CSIRKEMELL + "child::div[contains(@class,'menu-price-field')]/div/h6/strong/text()")
 
+    # fullday menu : /html/body/form/main/div/section[23]/div/table/tbody/tr[7]/td[2]/div/div[6]
+    # causes the difference between input data days, ingredients and prices
     print(len(days))
     print(days)
     print(len(ingredients))
@@ -68,9 +70,9 @@ def print_minimums(days, ingredients, prices):
     # initialize the output
     cheapest_csirkmell_at_weekdays = {day.name: ['Nincs', 999999] for day in Workdays}
     # create a generator for the merged days, meals and prices
-    meals = ((Workdays(int(day)).name, ingredient, price.replace('.', '').replace(' Ft', '')) for day, ingredient, price
+    meals = [(Workdays(int(day)).name, ingredient, price.replace('.', '').replace(' Ft', '')) for day, ingredient, price
              in
-             zip(days, ingredients, prices))
+             zip(days, ingredients, prices)]
 
     # Add cheaper meal to each day
     for meal in meals:
