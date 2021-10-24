@@ -1,5 +1,18 @@
+from enum import Enum
+
 import requests
 from lxml import html
+
+
+class Workdays(Enum):
+    MONDAY = 1
+    TUESDAY = 2
+    WEDNESDAY = 3
+    THURSDAY = 4
+    FRIDAY = 5
+
+
+# more days
 
 page = requests.get(url='https://www.teletal.hu/etlap/45')
 # decode bytes of page's content
@@ -14,5 +27,5 @@ prices = content.xpath(prefix + csirkemell + "child::div[contains(@class,'menu-p
 days = content.xpath(prefix + "/div" + csirkemell + "following-sibling::div/a/@nap")
 contents = content.xpath(prefix + csirkemell + "div/text()")
 
-meal_dict = {day: (content, price) for day, content, price in zip(days, contents, prices)}
+meal_dict = [(Workdays(int(day)).name, content, price) for day, content, price in zip(days, contents, prices)]
 print(meal_dict)
