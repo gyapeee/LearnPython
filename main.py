@@ -26,6 +26,7 @@ class Workdays(Enum):
 
 
 def get_browser():
+    # get the webdriver in headless mode
     options = Options()
     options.headless = True
     chrome = webdriver.Chrome(ChromeDriverManager().install(), options=options)
@@ -45,23 +46,15 @@ def extract_data():
     ingredients = document.xpath(PREFIX + CSIRKEMELL + "div/text()")
     prices = document.xpath(
         PREFIX + CSIRKEMELL + "child::div[contains(@class,'menu-price-field')]/div/h6/strong/text()")
-
-    # fullday menu : /html/body/form/main/div/section[23]/div/table/tbody/tr[7]/td[2]/div/div[6]
-    # causes the difference between input data days, ingredients and prices
-    print(len(days))
-    print(days)
-    print(len(ingredients))
-    print(ingredients)
-    print(len(prices))
-    print(prices)
     return days, ingredients, prices
 
 
 def print_minimums(days, ingredients, prices):
+    # count when the length are the same for days, ingredients annd prices
     if len(days) == len(ingredients) and len(ingredients) == len(prices):
         # initialize the output
         cheapest_csirkmell_at_weekdays = {day.name: ['Nincs', 999999] for day in Workdays}
-        # create a generator for the merged days, meals and prices
+        # remove the . and Ft from prices to be able to convert as integer
         meals = ((Workdays(int(day)).name, ingredient, price.replace('.', '').replace(' Ft', '')) for
                  day, ingredient, price
                  in
@@ -75,8 +68,6 @@ def print_minimums(days, ingredients, prices):
                 cheapest_csirkmell_at_weekdays[meal[0]][1] = int(meal[2])
 
         print(cheapest_csirkmell_at_weekdays)
-        # getting the mininum is not fine
-        print('520 Ft' > '1.290 Ft')
     else:
         raise Exception('Cannot print cheapest for all day',
                         'different length in days, ingredients, prices lists: ' + str(len(days)) + ', ' + str(len(
@@ -92,7 +83,7 @@ scroll_down_to_end()
 html_page = browser.page_source
 time.sleep(2)
 # replacing <br> is required to avoid counting multiple times the csirkemell in case of ingredients
-document = html.fromstring(html_page.replace('<br>', ' '))
+document = html.fromstring(html_page.replace('<br>', ''))
 
 # get data from html and print output
 days, ingredients, prices = extract_data()
