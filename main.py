@@ -11,6 +11,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 TELETAL_URL = "https://www.teletal.hu/etlap/45"
 PREFIX = "//div[contains(@class,'menu-card-5-day')]/div[contains(@class,'menu-cell-text')]"
 CSIRKEMELL = "[contains(normalize-space(),'csirkemell')]/"
+_100MS = 0.1
+SCROLL_STEPS = 17
 
 
 class Workdays(Enum):
@@ -24,14 +26,14 @@ class Workdays(Enum):
 def get_browser():
     options = Options()
     options.headless = True
-    browser = webdriver.Chrome(ChromeDriverManager().install(), options=options)
-    browser.get(TELETAL_URL)
-    return browser
+    chrome = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+    chrome.get(TELETAL_URL)
+    return chrome
 
 
 def scroll_down_to_end():
-    for i in range(17):
-        time.sleep(0.1)
+    for i in range(SCROLL_STEPS):
+        time.sleep(_100MS)
         body.send_keys(Keys.PAGE_DOWN)
 
 
