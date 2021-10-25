@@ -10,7 +10,9 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 TELETAL_URL = "https://www.teletal.hu/etlap/45"
 PREFIX = "//div[contains(@class,'menu-card-5-day')]/div[contains(@class,'menu-cell-text')]"
-CSIRKEMELL = "[contains(normalize-space(),'csirkemell')]/"
+# translate is needed toi have lowercase input
+CSIRKEMELL = "[contains(translate(normalize-space(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')," \
+             "'csirkemell')]/ "
 _100MS = 0.1
 SCROLL_STEPS = 17
 
@@ -60,10 +62,10 @@ def print_minimums(days, ingredients, prices):
         # initialize the output
         cheapest_csirkmell_at_weekdays = {day.name: ['Nincs', 999999] for day in Workdays}
         # create a generator for the merged days, meals and prices
-        meals = [(Workdays(int(day)).name, ingredient, price.replace('.', '').replace(' Ft', '')) for
+        meals = ((Workdays(int(day)).name, ingredient, price.replace('.', '').replace(' Ft', '')) for
                  day, ingredient, price
                  in
-                 zip(days, ingredients, prices)]
+                 zip(days, ingredients, prices))
 
         # Add cheaper meal to each day
         for meal in meals:
@@ -81,15 +83,18 @@ def print_minimums(days, ingredients, prices):
                             ingredients)) + ', ' + str(len(prices)))
 
 
+# fetch the whole html
 browser = get_browser()
 body = browser.find_element(By.TAG_NAME, 'html')
-# get end pos
 scroll_down_to_end()
 
+# get the whole html
 html_page = browser.page_source
 time.sleep(2)
-document = html.fromstring(html_page)
+# replacing <br> is required to avoid counting multiple times the csirkemell in case of ingredients
+document = html.fromstring(html_page.replace('<br>', ' '))
 
+# get data from html and print output
 days, ingredients, prices = extract_data()
 print_minimums(days, ingredients, prices)
 
