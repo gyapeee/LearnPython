@@ -5,6 +5,7 @@ from lxml import html
 from selenium import webdriver
 from selenium.webdriver import Keys
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 
@@ -29,7 +30,8 @@ def get_browser():
     # get the webdriver in headless mode
     options = Options()
     options.headless = True
-    chrome = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+    service = Service(ChromeDriverManager().install())
+    chrome = webdriver.Chrome(service=service, options=options)
     chrome.get(TELETAL_URL)
     return chrome
 
