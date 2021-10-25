@@ -16,6 +16,7 @@ CSIRKEMELL = "[contains(translate(normalize-space(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ
              "'csirkemell')]/ "
 _100MS = 0.1
 SCROLL_STEPS = 17
+HIGH_PRICE = 999999
 
 
 class Workdays(Enum):
@@ -37,6 +38,7 @@ def get_browser():
 
 
 def scroll_down_to_end():
+    # scrolls down to the end of the page
     for i in range(SCROLL_STEPS):
         time.sleep(_100MS)
         body.send_keys(Keys.PAGE_DOWN)
@@ -55,7 +57,7 @@ def print_minimums(days, ingredients, prices):
     # count when the length are the same for days, ingredients annd prices
     if len(days) == len(ingredients) and len(ingredients) == len(prices):
         # initialize the output
-        cheapest_csirkmell_at_weekdays = {day.name: ['Nincs', 999999] for day in Workdays}
+        cheapest_csirkmell_at_weekdays = {day.name: ['Nincs', HIGH_PRICE] for day in Workdays}
         # remove the . and Ft from prices to be able to convert as integer
         meals = ((Workdays(int(day)).name, ingredient, price.replace('.', '').replace(' Ft', '')) for
                  day, ingredient, price
@@ -84,7 +86,7 @@ scroll_down_to_end()
 # get the whole html
 html_page = browser.page_source
 time.sleep(2)
-# replacing <br> is required to avoid counting multiple times the csirkemell in case of ingredients
+# replacing <br> is required to avoid counting multiple times the csirkemell text in case of ingredients
 document = html.fromstring(html_page.replace('<br>', ''))
 
 # get data from html and print output
