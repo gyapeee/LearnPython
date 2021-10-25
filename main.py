@@ -29,22 +29,9 @@ def get_browser():
     return browser
 
 
-def get_end_position():
-    body.send_keys(Keys.END)
-    end_of_page = browser.execute_script('return window.pageYOffset;')
-    print(end_of_page)
-    time.sleep(2)
-    end_of_page = browser.execute_script('return window.scrollY;')
-    time.sleep(2)
-    body.send_keys(Keys.HOME)
-    time.sleep(2)
-    print(end_of_page)
-
-
-def traverse_page():
+def scroll_down_to_end():
     for i in range(17):
-        time.sleep(1)
-        print(browser.execute_script('return window.scrollY;'))
+        time.sleep(0.1)
         body.send_keys(Keys.PAGE_DOWN)
 
 
@@ -67,29 +54,35 @@ def extract_data():
 
 
 def print_minimums(days, ingredients, prices):
-    # initialize the output
-    cheapest_csirkmell_at_weekdays = {day.name: ['Nincs', 999999] for day in Workdays}
-    # create a generator for the merged days, meals and prices
-    meals = [(Workdays(int(day)).name, ingredient, price.replace('.', '').replace(' Ft', '')) for day, ingredient, price
-             in
-             zip(days, ingredients, prices)]
+    if len(days) == len(ingredients) and len(ingredients) == len(prices):
+        # initialize the output
+        cheapest_csirkmell_at_weekdays = {day.name: ['Nincs', 999999] for day in Workdays}
+        # create a generator for the merged days, meals and prices
+        meals = [(Workdays(int(day)).name, ingredient, price.replace('.', '').replace(' Ft', '')) for
+                 day, ingredient, price
+                 in
+                 zip(days, ingredients, prices)]
 
-    # Add cheaper meal to each day
-    for meal in meals:
-        # replace the initial data if the actual price is less
-        if cheapest_csirkmell_at_weekdays[meal[0]][1] > int(meal[2]):
-            cheapest_csirkmell_at_weekdays[meal[0]][0] = meal[1]
-            cheapest_csirkmell_at_weekdays[meal[0]][1] = int(meal[2])
+        # Add cheaper meal to each day
+        for meal in meals:
+            # replace the initial data if the actual price is less
+            if cheapest_csirkmell_at_weekdays[meal[0]][1] > int(meal[2]):
+                cheapest_csirkmell_at_weekdays[meal[0]][0] = meal[1]
+                cheapest_csirkmell_at_weekdays[meal[0]][1] = int(meal[2])
 
-    print(cheapest_csirkmell_at_weekdays)
-    # getting the mininum is not fine
-    print('520 Ft' > '1.290 Ft')
+        print(cheapest_csirkmell_at_weekdays)
+        # getting the mininum is not fine
+        print('520 Ft' > '1.290 Ft')
+    else:
+        raise Exception('Cannot print cheapest for all day',
+                        'different length in days, ingredients, prices lists: ' + str(len(days)) + ', ' + str(len(
+                            ingredients)) + ', ' + str(len(prices)))
 
 
 browser = get_browser()
 body = browser.find_element(By.TAG_NAME, 'html')
 # get end pos
-traverse_page()
+scroll_down_to_end()
 
 html_page = browser.page_source
 time.sleep(2)
